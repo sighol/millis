@@ -14,3 +14,9 @@ Options:
   -l, --local  Use local timezone
   -h, --help   Print help
 ```
+
+## Installation
+
+```
+cargo install --git https://github.com/sighol/millis
+```
