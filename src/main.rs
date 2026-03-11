@@ -4,7 +4,7 @@ use clap::Parser;
 
 #[derive(Parser, Debug, Clone)]
 struct Args {
-    millis: Option<f64>,
+    millis: Option<String>,
 
     #[arg(short = 'l', long = "local", help = "Use local timezone")]
     use_local_timezone: bool,
@@ -32,10 +32,15 @@ fn main() {
     } else if args.now {
         let utc = Utc::now();
         let utc = utc
-            .with_nanosecond(utc.nanosecond() / 1_000_000 * 1_000_000)
-            .unwrap();
-        print_time(utc, &args);
-    } else if let Some(millis) = args.millis {
+        .with_nanosecond(utc.nanosecond() / 1_000_000 * 1_000_000)
+        .unwrap();
+    print_time(utc, &args);
+} else if let Some(millis) = &args.millis {
+        let millis = millis.replace("_", "");
+        let millis = match millis.parse::<f64>() {
+            Ok(x) => x,
+            Err(_) => panic!("Could not parse time: {}", millis),
+        };
         let utc = DateTime::from_timestamp_millis(millis as i64).unwrap();
         print_time(utc, &args);
     } else {
